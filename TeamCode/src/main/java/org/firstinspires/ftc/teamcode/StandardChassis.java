@@ -50,6 +50,11 @@ public abstract class StandardChassis extends OpMode {
     int wasteAllocationLoadLifterEarthBegin;
     private DcMotor wasteAllocationLoadLifterEarth;
 
+    //Screw
+    int extraterrestrialVegetationEvaluatorBegin;
+    private DcMotor extraterrestrialVegetationEvaluator;
+
+
     //gyroscope built into hub
     private BNO055IMU bosch;
 
@@ -61,6 +66,7 @@ public abstract class StandardChassis extends OpMode {
     protected boolean hackTimeouts = true;
     protected boolean useArm = true;
     protected boolean useSampling = true;
+    protected boolean useEve = true;
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -181,10 +187,17 @@ public abstract class StandardChassis extends OpMode {
 
         // init the lifter arm,
         if (config.getHasWalle()) {
-            wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
-            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+            if (useEve == true) {
+                extraterrestrialVegetationEvaluator = hardwareMap.get(DcMotor.class, "motor6");
+                extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                extraterrestrialVegetationEvaluatorBegin = extraterrestrialVegetationEvaluator.getCurrentPosition();
+            } else {
+                wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
+                wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+            }
         }
     }
 
@@ -670,13 +683,11 @@ public abstract class StandardChassis extends OpMode {
     protected void descendFromLander() {
         if(!config.getlyftStrategy()) {
             // go down.
-            //lyftDownWalle(-4956);
-            lyftDownWalle(-4856);
-            //existing Quiksilver descend stragety
-            strafeRight(1000);
-            turnLeft(10); // HACK BABY
+            lyftDownEve(13930);
+            encoderDrive(10);
+            lyftDownEve(-13930);
         } else {
-            lyftDownWalle(-1449);
+            lyftDownEve(-1449);
             //write new phatswipe descend strategy
             turnLeft(25);
             encoderDrive(2,2);
@@ -684,7 +695,7 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
-    protected void lyftDownWalle(int howManySpins) {
+   /* protected void lyftDownWalle(int howManySpins) {
         double speed = 0.5f;
 
         // Get the current position.
@@ -712,7 +723,39 @@ public abstract class StandardChassis extends OpMode {
         wasteAllocationLoadLifterEarth.setPower(0);
 
         //sleep(5000);
+    } */
+
+
+    protected void lyftDownEve(int howManySpins) {
+        double speed = 0.5f;
+
+        // Get the current position.
+        int lyftBegin = extraterrestrialVegetationEvaluator.getCurrentPosition();
+        telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
+
+        // Determine new target position, and pass to motor controller
+        int lyftTarget = lyftBegin + howManySpins;
+        extraterrestrialVegetationEvaluator.setTargetPosition(lyftTarget);
+        telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
+
+        // Turn On RUN_TO_POSITION
+        extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extraterrestrialVegetationEvaluator.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && extraterrestrialVegetationEvaluator.isBusy()) {
+            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", extraterrestrialVegetationEvaluator.getCurrentPosition(), lyftTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extraterrestrialVegetationEvaluator.setPower(0);
+
+        //sleep(5000);
     }
+
 
        protected GoldStatus sampleProbe() {
            GoldStatus pos = loopSampling();
@@ -732,10 +775,11 @@ public abstract class StandardChassis extends OpMode {
     protected void craterRun(){
         encoderDrive(46, 46);
     }
+
     protected void depotRun() {
         encoderDrive(52, 52);
-
     }
+
 
     protected void craterSampleRun(){
         GoldStatus pos = sampleProbe();
@@ -784,4 +828,4 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
-    }
+  }
