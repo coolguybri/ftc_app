@@ -110,7 +110,7 @@ public abstract class StandardChassis extends OpMode {
               if (detector.isFound()) {
 
                   int gY = (int) detector.getScreenPosition().x;
-                  if (gY < 200) {
+                  if (gY <= 200) {
                       goldStatus = GoldStatus.Left;
                   } else if (gY > 450) {
                       goldStatus = GoldStatus.Right;
@@ -684,7 +684,7 @@ public abstract class StandardChassis extends OpMode {
         if(!config.getlyftStrategy()) {
             // go down.
             lyftDownEve(13930);
-            encoderDrive(10);
+            encoderDrive(3);
             lyftDownEve(-13930);
         } else {
             lyftDownEve(-1449);
@@ -783,20 +783,24 @@ public abstract class StandardChassis extends OpMode {
 
     protected void craterSampleRun(){
         GoldStatus pos = sampleProbe();
+        craterSampleRun(pos);
+    }
+
+    protected void craterSampleRun(GoldStatus pos){
         if (pos == GoldStatus.Left) {
-            encoderDrive(10);
+            encoderDrive(6);
             turnLeft(90);
             encoderDrive(10);
             turnRight(75);
-            encoderDrive(30);
+            encoderDrive(35);
         } else if (pos == GoldStatus.Right) {
             encoderDrive(14);
             turnRight(90);
             encoderDrive(5);
             turnLeft(90);
-            encoderDrive(25);
-        } else {
             encoderDrive(30);
+        } else {
+            encoderDrive(40);
         }
     }
 
