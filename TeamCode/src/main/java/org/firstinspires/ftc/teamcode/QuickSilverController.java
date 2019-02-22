@@ -120,7 +120,6 @@ public class QuickSilverController extends OpMode {
 
         if (useDropper) {
             flagHolder = hardwareMap.get(Servo.class, "servo1");
-            flagHolder.setPosition(0.5);
         }
     }
 
@@ -244,7 +243,7 @@ public class QuickSilverController extends OpMode {
             if (gamepad1.b) {
                 flagHolder.setPosition(1.0);
             } else {
-                flagHolder.setPosition(-1.0);
+                flagHolder.setPosition(0.5);
             }
         }
 
@@ -384,6 +383,7 @@ public class QuickSilverController extends OpMode {
                 lifterExtenderTarget = 0;
                 lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 lifter.setPower(lifterManualPower);
+
             }
 
             boolean liftAllIn = gamepad2.dpad_left;

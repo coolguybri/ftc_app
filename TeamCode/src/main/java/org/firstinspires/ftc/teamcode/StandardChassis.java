@@ -269,7 +269,11 @@ public abstract class StandardChassis extends OpMode {
 
     public void resetFlag() {
         if (useTeamMarker) {
-            angleHand = 0.5;
+            if(config.isTeamMarkerReversed()) {
+                angleHand = 0.0;
+            } else {
+                angleHand = 1.0;
+            }
             flagHolder.setPosition(angleHand);
         }
     }
@@ -684,8 +688,8 @@ public abstract class StandardChassis extends OpMode {
         if(!config.getlyftStrategy()) {
             // go down.
             lyftDownEve(13930);
-            encoderDrive(3);
-            lyftDownEve(-13930);
+            encoderDrive(7);
+            lyftDownEve(-13910);
         } else {
             lyftDownEve(-1449);
             //write new phatswipe descend strategy
@@ -804,18 +808,19 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
-    protected void depotSampleRun() {
-        GoldStatus pos = sampleProbe();
+    protected void depotSampleRun(GoldStatus pos) {
         if (pos == GoldStatus.Left) {
-            turnLeft(90);
-            encoderDrive(10);
-            turnRight(75);
-            encoderDrive(20);
-            turnRight(90);
-            dropFlag();
-            sleep(3000);
-            resetFlag();
+            encoderDrive(15);
+            turnLeft(75);
+            //encoderDrive(10);
+           // turnRight(90);
+          //  encoderDrive(30);
+          ////////  //turnRight(90);
+          //  dropFlag();
+          //  sleep(3000);
+          //  resetFlag();
         } else if (pos == GoldStatus.Right) {
+            encoderDrive(5);
             turnRight(90);
             encoderDrive(10);
             turnLeft(75);
@@ -825,7 +830,7 @@ public abstract class StandardChassis extends OpMode {
             sleep(3000);
             resetFlag();
         } else {
-            encoderDrive(30);
+            encoderDrive(45);
             dropFlag();
             sleep(3000);
             resetFlag();
