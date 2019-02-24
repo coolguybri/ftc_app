@@ -810,22 +810,22 @@ public abstract class StandardChassis extends OpMode {
 
     protected void depotSampleRun(GoldStatus pos) {
         if (pos == GoldStatus.Left) {
-            encoderDrive(15);
+            encoderDrive(8);
             turnLeft(75);
-            //encoderDrive(10);
-           // turnRight(90);
-          //  encoderDrive(30);
-          ////////  //turnRight(90);
-          //  dropFlag();
-          //  sleep(3000);
-          //  resetFlag();
-        } else if (pos == GoldStatus.Right) {
-            encoderDrive(5);
+            encoderDrive(17);
             turnRight(90);
-            encoderDrive(10);
-            turnLeft(75);
-            encoderDrive(20);
+            encoderDrive(35);
+            //turnRight(90);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        } else if (pos == GoldStatus.Right) {
+            encoderDrive(8);
+            turnRight(75);
+            encoderDrive(17);
             turnLeft(90);
+            encoderDrive(35);
+            //turnLeft(90);
             dropFlag();
             sleep(3000);
             resetFlag();

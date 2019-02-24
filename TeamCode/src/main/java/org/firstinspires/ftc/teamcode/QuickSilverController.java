@@ -240,11 +240,15 @@ public class QuickSilverController extends OpMode {
         }
 
         if (useDropper) {
+            angleHand = 0.0;
             if (gamepad1.b) {
-                flagHolder.setPosition(1.0);
-            } else {
-                flagHolder.setPosition(0.5);
+                angleHand = 1.0;
             }
+            flagHolder.setPosition(angleHand);
+
+            /*else {
+                flagHolder.setPosition(0.0);
+            }*/
         }
 
         if (useArm) {

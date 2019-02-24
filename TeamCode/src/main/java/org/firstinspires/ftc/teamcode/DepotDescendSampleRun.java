@@ -69,7 +69,7 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
      */
     @Override
     public void init_loop () {
-
+        resetFlag();
     }
 
     /**
@@ -103,16 +103,17 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
 
             startingAngle = getGyroscopeAngle();
 
-           // pos = loopSampling();
+            pos = loopSampling();
 
             // HACK
 
-            descendFromLander();
+            //descendFromLander();
 
-          //HACK
-            // if (pos == GoldStatus.Unknown)
-           //     pos = sampleProbe();
-            pos = GoldStatus.Left;
+             if (pos == GoldStatus.Unknown)
+                pos = sampleProbe();
+
+            //HACK!
+            //pos = GoldStatus.Left;
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
 
