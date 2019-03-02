@@ -44,6 +44,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public abstract class DepotDescendDelaySampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
+    private GoldStatus pos = GoldStatus.Unknown;
+
 
     public DepotDescendDelaySampleRun(ChassisConfig config) {
         super(config);
@@ -96,7 +98,7 @@ public abstract class DepotDescendDelaySampleRun extends StandardChassis {
             descendFromLander();
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            depotSampleRun();
+            depotSampleRun(pos);
 
             madeTheRun = true;
         }
