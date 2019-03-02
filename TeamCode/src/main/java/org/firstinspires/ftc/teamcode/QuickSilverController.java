@@ -120,7 +120,6 @@ public class QuickSilverController extends OpMode {
 
         if (useDropper) {
             flagHolder = hardwareMap.get(Servo.class, "servo1");
-            flagHolder.setPosition(0.5);
         }
     }
 
@@ -241,11 +240,15 @@ public class QuickSilverController extends OpMode {
         }
 
         if (useDropper) {
+            angleHand = 0.0;
             if (gamepad1.b) {
-                flagHolder.setPosition(1.0);
-            } else {
-                flagHolder.setPosition(-1.0);
+                angleHand = 1.0;
             }
+            flagHolder.setPosition(angleHand);
+
+            /*else {
+                flagHolder.setPosition(0.0);
+            }*/
         }
 
         if (useArm) {
@@ -372,10 +375,10 @@ public class QuickSilverController extends OpMode {
             boolean extendIn = gamepad1.left_bumper;
             double lifterManualPower = 0.0;
             if (extendOut) {
-                lifterManualPower = -1.0;
+                lifterManualPower = 1.0;
             }
             if (extendIn) {
-                lifterManualPower = 1.0;
+                lifterManualPower = -1.0;
             }
             if (lifterManualPower != 0.0 || lifterState == 0) {
                 // we get here if we ar ealready in manual control, or if we are in the process of moving to a preset,
@@ -384,6 +387,7 @@ public class QuickSilverController extends OpMode {
                 lifterExtenderTarget = 0;
                 lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 lifter.setPower(lifterManualPower);
+
             }
 
             boolean liftAllIn = gamepad2.dpad_left;

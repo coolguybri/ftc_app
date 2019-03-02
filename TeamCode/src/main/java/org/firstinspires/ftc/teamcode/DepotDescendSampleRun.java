@@ -44,6 +44,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public abstract class DepotDescendSampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
+    private GoldStatus pos = GoldStatus.Unknown;
+
 
     public DepotDescendSampleRun(ChassisConfig config) {
         super(config);
@@ -57,6 +59,8 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
         initMotors();
         initTimeouts();
         initSampling();
+        initGyroscope();
+
     }
 
 
@@ -65,7 +69,7 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
      */
     @Override
     public void init_loop () {
-
+        resetFlag();
     }
 
     /**
@@ -85,24 +89,45 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
         stopSampling();
     }
 
+    float startingAngle = 0.0f;
+    float endingAngle = 0.0f;
+
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop () {
 
+
         if (madeTheRun == false) {
-            descendFromLander();
+
+            startingAngle = getGyroscopeAngle();
+
+            pos = loopSampling();
+
+            // HACK
+
+            //descendFromLander();
+
+             if (pos == GoldStatus.Unknown)
+                pos = sampleProbe();
+
+            //HACK!
+            //pos = GoldStatus.Left;
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            depotSampleRun();
+
+            depotSampleRun(pos);
 
             madeTheRun = true;
+            endingAngle = getGyroscopeAngle();
         }
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "time: " + runtime.toString());
-        telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
+        telemetry.addData("Sampling", "Pos: " + pos.toString());
+        telemetry.addData("Status", "madeTheRun=%b, elapsed=%s", madeTheRun, runtime.toString());
+        //telemetry.addData("Rotation", "start=%.0f, end=%.0f", startingAngle, endingAngle);
+        telemetry.addData("Rotation", "start=" + startingAngle + ", end=" + endingAngle);
     }
 }
 

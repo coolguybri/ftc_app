@@ -43,6 +43,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 public abstract class DepotSampleRun extends StandardChassis {
 
+    private GoldStatus pos = GoldStatus.Unknown;
     private boolean madeTheRun = false;
 
     public DepotSampleRun(ChassisConfig config) {
@@ -93,7 +94,7 @@ public abstract class DepotSampleRun extends StandardChassis {
 
         if (madeTheRun == false) {
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            depotSampleRun();
+            depotSampleRun(pos);
 
             madeTheRun = true;
         }

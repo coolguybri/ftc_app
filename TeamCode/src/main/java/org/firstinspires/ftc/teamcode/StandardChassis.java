@@ -66,7 +66,7 @@ public abstract class StandardChassis extends OpMode {
     protected boolean hackTimeouts = true;
     protected boolean useArm = true;
     protected boolean useSampling = true;
-    protected boolean useEve = false;
+    protected boolean useEve = true;
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -110,7 +110,7 @@ public abstract class StandardChassis extends OpMode {
               if (detector.isFound()) {
 
                   int gY = (int) detector.getScreenPosition().x;
-                  if (gY < 200) {
+                  if (gY <= 200) {
                       goldStatus = GoldStatus.Left;
                   } else if (gY > 450) {
                       goldStatus = GoldStatus.Right;
@@ -269,7 +269,11 @@ public abstract class StandardChassis extends OpMode {
 
     public void resetFlag() {
         if (useTeamMarker) {
-            angleHand = 0.5;
+            if(config.isTeamMarkerReversed()) {
+                angleHand = 0.0;
+            } else {
+                angleHand = 1.0;
+            }
             flagHolder.setPosition(angleHand);
         }
     }
@@ -683,13 +687,11 @@ public abstract class StandardChassis extends OpMode {
     protected void descendFromLander() {
         if(!config.getlyftStrategy()) {
             // go down.
-            //lyftDownWalle(-4956);
-            lyftDownWalle(-4856);
-            //existing Quiksilver descend stragety
-            strafeRight(1000);
-            turnLeft(10); // HACK BABY
+            lyftDownEve(13930);
+            encoderDrive(7);
+            lyftDownEve(-13910);
         } else {
-            lyftDownWalle(-1449);
+            lyftDownEve(-1449);
             //write new phatswipe descend strategy
             turnLeft(25);
             encoderDrive(2,2);
@@ -697,7 +699,7 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
-    protected void lyftDownWalle(int howManySpins) {
+   /* protected void lyftDownWalle(int howManySpins) {
         double speed = 0.5f;
 
         // Get the current position.
@@ -725,35 +727,35 @@ public abstract class StandardChassis extends OpMode {
         wasteAllocationLoadLifterEarth.setPower(0);
 
         //sleep(5000);
-    }
+    } */
 
 
     protected void lyftDownEve(int howManySpins) {
         double speed = 0.5f;
 
         // Get the current position.
-        int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        int lyftBegin = extraterrestrialVegetationEvaluator.getCurrentPosition();
         telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
 
         // Determine new target position, and pass to motor controller
         int lyftTarget = lyftBegin + howManySpins;
-        wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
+        extraterrestrialVegetationEvaluator.setTargetPosition(lyftTarget);
         telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
 
         // Turn On RUN_TO_POSITION
-        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wasteAllocationLoadLifterEarth.setPower(speed);
+        extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extraterrestrialVegetationEvaluator.setPower(speed);
 
         ElapsedTime motorOnTime = new ElapsedTime();
-        while ((motorOnTime.seconds() < 30) && wasteAllocationLoadLifterEarth.isBusy()) {
-            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", wasteAllocationLoadLifterEarth.getCurrentPosition(), lyftTarget);
+        while ((motorOnTime.seconds() < 30) && extraterrestrialVegetationEvaluator.isBusy()) {
+            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", extraterrestrialVegetationEvaluator.getCurrentPosition(), lyftTarget);
             telemetry.update();
             sleep(10);
         }
 
         // Turn off RUN_TO_POSITION
-        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        wasteAllocationLoadLifterEarth.setPower(0);
+        extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extraterrestrialVegetationEvaluator.setPower(0);
 
         //sleep(5000);
     }
@@ -785,45 +787,50 @@ public abstract class StandardChassis extends OpMode {
 
     protected void craterSampleRun(){
         GoldStatus pos = sampleProbe();
+        craterSampleRun(pos);
+    }
+
+    protected void craterSampleRun(GoldStatus pos){
         if (pos == GoldStatus.Left) {
-            encoderDrive(10);
+            encoderDrive(6);
             turnLeft(90);
             encoderDrive(10);
             turnRight(75);
-            encoderDrive(30);
+            encoderDrive(35);
         } else if (pos == GoldStatus.Right) {
             encoderDrive(14);
             turnRight(90);
             encoderDrive(5);
             turnLeft(90);
-            encoderDrive(25);
-        } else {
             encoderDrive(30);
+        } else {
+            encoderDrive(40);
         }
     }
 
-    protected void depotSampleRun() {
-        GoldStatus pos = sampleProbe();
+    protected void depotSampleRun(GoldStatus pos) {
         if (pos == GoldStatus.Left) {
-            turnLeft(90);
-            encoderDrive(10);
-            turnRight(75);
-            encoderDrive(20);
+            encoderDrive(8);
+            turnLeft(75);
+            encoderDrive(17);
             turnRight(90);
+            encoderDrive(35);
+            //turnRight(90);
             dropFlag();
             sleep(3000);
             resetFlag();
         } else if (pos == GoldStatus.Right) {
-            turnRight(90);
-            encoderDrive(10);
-            turnLeft(75);
-            encoderDrive(20);
+            encoderDrive(8);
+            turnRight(75);
+            encoderDrive(17);
             turnLeft(90);
+            encoderDrive(35);
+            //turnLeft(90);
             dropFlag();
             sleep(3000);
             resetFlag();
         } else {
-            encoderDrive(30);
+            encoderDrive(45);
             dropFlag();
             sleep(3000);
             resetFlag();

@@ -56,16 +56,21 @@ public abstract class CraterDescendSampleRun extends StandardChassis {
 
         if (madeTheRun == false) {
 
-            descendFromLander();
-
             pos = loopSampling();
 
-            craterSampleRun();
+            descendFromLander();
+
+            if (pos == GoldStatus.Unknown)
+                pos = sampleProbe();
+
+            craterSampleRun(pos);
 
             madeTheRun = true;
+
         }
 
         // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "Pos: " + pos.toString());
         telemetry.addData("Status", "time: " + runtime.toString());
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
     }
