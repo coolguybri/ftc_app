@@ -58,6 +58,7 @@ public abstract class DepotSampleRun extends StandardChassis {
         initMotors();
         initTimeouts();
         initSampling();
+        initGyroscope();
     }
 
 
@@ -94,6 +95,14 @@ public abstract class DepotSampleRun extends StandardChassis {
 
         if (madeTheRun == false) {
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
+            pos = loopSampling();
+
+            encoderDrive(7);
+
+            if (pos == GoldStatus.Unknown)
+                pos = sampleProbe();
+
+
             depotSampleRun(pos);
 
             madeTheRun = true;

@@ -782,6 +782,7 @@ public abstract class StandardChassis extends OpMode {
 
     protected void depotRun() {
         encoderDrive(52, 52);
+        flagUpDown();
     }
 
 
@@ -791,34 +792,8 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected void craterSampleRun(GoldStatus pos){
-        if (pos == GoldStatus.Left) {
-            encoderDrive(6);
-            turnLeft(90);
-            encoderDrive(10);
-            turnRight(75);
-            encoderDrive(35);
-        } else if (pos == GoldStatus.Right) {
-            encoderDrive(14);
-            turnRight(90);
-            encoderDrive(5);
-            turnLeft(90);
-            encoderDrive(30);
-        } else {
-            encoderDrive(40);
-        }
-    }
-
-    protected void depotSampleRun(GoldStatus pos) {
-        if (pos == GoldStatus.Left) {
-            encoderDrive(8);
-            turnLeft(75);
-            encoderDrive(17);
-            turnRight(90);
-            encoderDrive(35);
-            //turnRight(90);
-            dropFlag();
-            sleep(3000);
-            resetFlag();
+        if (pos == GoldStatus.Center) {
+            encoderDrive(45);
         } else if (pos == GoldStatus.Right) {
             encoderDrive(8);
             turnRight(75);
@@ -826,14 +801,47 @@ public abstract class StandardChassis extends OpMode {
             turnLeft(90);
             encoderDrive(35);
             //turnLeft(90);
-            dropFlag();
-            sleep(3000);
-            resetFlag();
         } else {
+            //Left
+            encoderDrive(8);
+            turnLeft(75);
+            encoderDrive(17);
+            turnRight(90);
+            encoderDrive(35);
+
+            //turnRight(90);
+        }
+    }
+
+
+    protected void flagUpDown(){
+        dropFlag();
+        sleep(3000);
+        resetFlag();
+    }
+
+    protected void depotSampleRun(GoldStatus pos) {
+        if (pos == GoldStatus.Center) {
             encoderDrive(45);
-            dropFlag();
-            sleep(3000);
-            resetFlag();
+            flagUpDown();
+        } else if (pos == GoldStatus.Right) {
+            encoderDrive(8);
+            turnRight(75);
+            encoderDrive(17);
+            turnLeft(90);
+            encoderDrive(35);
+            //turnLeft(90);
+            flagUpDown();
+        } else {
+            //Left
+            encoderDrive(8);
+            turnLeft(75);
+            encoderDrive(17);
+            turnRight(90);
+            encoderDrive(35);
+            flagUpDown();
+
+            //turnRight(90);
         }
     }
 

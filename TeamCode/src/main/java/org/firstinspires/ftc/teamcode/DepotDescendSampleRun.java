@@ -45,10 +45,12 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
     private GoldStatus pos = GoldStatus.Unknown;
+    private long delay;
 
 
-    public DepotDescendSampleRun(ChassisConfig config) {
+    public DepotDescendSampleRun(ChassisConfig config, long delay) {
         super(config);
+        this.delay = delay;
     }
 
     /**
@@ -105,15 +107,12 @@ public abstract class DepotDescendSampleRun extends StandardChassis {
 
             pos = loopSampling();
 
-            // HACK
-
-            //descendFromLander();
+            descendFromLander();
 
              if (pos == GoldStatus.Unknown)
                 pos = sampleProbe();
 
-            //HACK!
-            //pos = GoldStatus.Left;
+             sleep(delay);
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
 
