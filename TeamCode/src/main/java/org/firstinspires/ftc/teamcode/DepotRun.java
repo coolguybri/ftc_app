@@ -55,10 +55,6 @@ public abstract class DepotRun extends StandardChassis {
         if (madeTheRun == false) {
 
             depotRun();
-            dropFlag();
-            sleep(1000);
-            resetFlag();
-
 
             madeTheRun = true;
         }
