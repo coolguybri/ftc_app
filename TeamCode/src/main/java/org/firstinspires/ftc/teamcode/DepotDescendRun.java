@@ -57,11 +57,6 @@ public abstract class DepotDescendRun extends StandardChassis {
 
             depotRun();
 
-            dropFlag();
-            sleep(3000);
-            resetFlag();
-
-
             madeTheRun = true;
         }
 
